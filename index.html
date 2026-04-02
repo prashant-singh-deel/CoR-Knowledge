@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Deel COR — Knowledge Base</title>
+<style>
+  :root {
+    --deel-blue: #1A56DB;
+    --deel-dark: #111827;
+    --deel-mid: #374151;
+    --deel-light: #F9FAFB;
+    --deel-border: #E5E7EB;
+    --deel-accent: #EFF6FF;
+    --deel-warn: #FEF3C7;
+    --deel-warn-border: #F59E0B;
+    --deel-danger: #FEE2E2;
+    --deel-danger-border: #EF4444;
+    --deel-success: #D1FAE5;
+    --deel-success-border: #10B981;
+    --sidebar-width: 240px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--deel-light);
+    color: var(--deel-dark);
+    display: flex;
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-width);
+    background: #fff;
+    border-right: 1px solid var(--deel-border);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    padding: 24px 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--deel-border);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-logo span {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--deel-blue);
+    letter-spacing: -0.5px;
+  }
+
+  .sidebar-logo .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--deel-accent);
+    color: var(--deel-blue);
+    border: 1px solid var(--deel-blue);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .sidebar-section {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9CA3AF;
+    padding: 12px 20px 4px;
+  }
+
+  .sidebar-item {
+    display: block;
+    padding: 7px 20px;
+    color: var(--deel-mid);
+    cursor: pointer;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+
+  .sidebar-item:hover { background: var(--deel-accent); color: var(--deel-blue); }
+  .sidebar-item.active {
+    background: var(--deel-accent);
+    color: var(--deel-blue);
+    border-left-color: var(--deel-blue);
+    font-weight: 600;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--deel-border);
+    padding: 14px 32px;
+    position: sticky; top: 0;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .topbar h1 { font-size: 17px; font-weight: 700; color: var(--deel-dark); }
+  .topbar .sub { font-size: 12px; color: #6B7280; }
+
+  .rename-pill {
+    font-size: 11px;
+    background: var(--deel-warn);
+    color: #92400E;
+    border: 1px solid var(--deel-warn-border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    background: #fff;
+    border-bottom: 1px solid var(--deel-border);
+    padding: 0 32px;
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6B7280;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+
+  .tab:hover { color: var(--deel-blue); }
+  .tab.active { color: var(--deel-blue); border-bottom-color: var(--deel-blue); font-weight: 600; }
+
+  /* ── CONTENT ── */
+  .content { padding: 32px; max-width: 960px; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--deel-dark); }
+  h3 { font-size: 15px; font-weight: 600; margin: 24px 0 10px; color: var(--deel-mid); }
+  h4 { font-size: 13px; font-weight: 600; margin: 16px 0 6px; color: var(--deel-dark); }
+
+  p { margin-bottom: 12px; color: var(--deel-mid); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-left: 4px solid;
+    font-size: 13px;
+  }
+  .callout.warn { background: var(--deel-warn); border-color: var(--deel-warn-border); color: #78350F; }
+  .callout.danger { background: var(--deel-danger); border-color: var(--deel-danger-border); color: #7F1D1D; }
+  .callout.info { background: var(--deel-accent); border-color: var(--deel-blue); color: #1E3A5F; }
+  .callout.success { background: var(--deel-success); border-color: var(--deel-success-border); color: #064E3B; }
+  .callout strong { display: block; margin-bottom: 4px; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--deel-light);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6B7280;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 2px solid var(--deel-border);
+  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--deel-border); vertical-align: top; }
+  tr:hover td { background: var(--deel-accent); }
+  .yes { color: #059669; font-weight: 600; }
+  .no { color: #DC2626; font-weight: 600; }
+  .conditional { color: #D97706; font-weight: 600; }
+
+  /* ── PROCESS FLOW ── */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 20px 0;
+    align-items: stretch;
+  }
+
+  .flow-step {
+    flex: 1;
+    min-width: 120px;
+    max-width: 180px;
+    background: #fff;
+    border: 1.5px solid var(--deel-border);
+    border-radius: 8px;
+    padding: 14px 12px;
+    font-size: 12px;
+    text-align: center;
+    position: relative;
+  }
+
+  .flow-step .step-num {
+    display: inline-block;
+    width: 22px; height: 22px;
+    background: var(--deel-blue);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 22px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .flow-step .step-label { font-weight: 600; color: var(--deel-dark); margin-bottom: 4px; }
+  .flow-step .step-sub { color: #6B7280; font-size: 11px; }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: var(--deel-blue);
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  /* ── STAKEHOLDER CARDS ── */
+  .stakeholder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .stakeholder-card {
+    background: #fff;
+    border: 1px solid var(--deel-border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .stakeholder-card .role {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--deel-blue);
+    margin-bottom: 8px;
+  }
+
+  .stakeholder-card ul { padding-left: 16px; font-size: 12px; color: var(--deel-mid); }
+  .stakeholder-card li { margin-bottom: 4px; }
+
+  /* ── FAQ ── */
+  .faq-item {
+    border: 1px solid var(--deel-border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .faq-q {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .faq-q:hover { background: var(--deel-accent); }
+  .faq-q .chevron { transition: transform 0.2s; font-size: 10px; color: #9CA3AF; flex-shrink: 0; }
+  .faq-q.open .chevron { transform: rotate(180deg); }
+
+  .faq-a {
+    display: none;
+    padding: 0 16px 14px;
+    font-size: 13px;
+    color: var(--deel-mid);
+    border-top: 1px solid var(--deel-border);
+    padding-top: 12px;
+  }
+
+  .faq-a.open { display: block; }
+
+  /* ── SECTION CARD ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--deel-border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card h3 { margin-top: 0; }
+
+  /* ── PRICING EXAMPLE ── */
+  .pricing-ex {
+    background: var(--deel-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 12px;
+    font-family: monospace;
+    margin: 10px 0;
+    border: 1px solid var(--deel-border);
+  }
+
+  .pricing-ex .inv { font-weight: 700; color: var(--deel-blue); }
+
+  /* ── CHANNEL LIST ── */
+  .channel-tag {
+    display: inline-block;
+    background: #EFF6FF;
+    color: var(--deel-blue);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: monospace;
+  }
+
+  /* responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span>deel.</span><span class="badge">COR</span>
+  </div>
+
+  <div class="sidebar-section">Core</div>
+  <a class="sidebar-item active" onclick="showTab('overview')">Product Overview</a>
+  <a class="sidebar-item" onclick="showTab('definitions')">Key Concepts</a>
+
+  <div class="sidebar-section">Operations</div>
+  <a class="sidebar-item" onclick="showTab('availability')">Availability & Eligibility</a>
+  <a class="sidebar-item" onclick="showTab('lifecycle')">End-to-End Lifecycle</a>
+  <a class="sidebar-item" onclick="showTab('onboarding')">Onboarding (OBM/CSM)</a>
+  <a class="sidebar-item" onclick="showTab('termination')">Termination</a>
+
+  <div class="sidebar-section">Finance</div>
+  <a class="sidebar-item" onclick="showTab('pricing')">Pricing & Discounts</a>
+  <a class="sidebar-item" onclick="showTab('invoicing')">Invoicing</a>
+
+  <div class="sidebar-section">Compliance</div>
+  <a class="sidebar-item" onclick="showTab('compliance')">Compliance Docs</a>
+  <a class="sidebar-item" onclick="showTab('exemptions')">Exemptions & Clauses</a>
+  <a class="sidebar-item" onclick="showTab('verification')">Verification Letters</a>
+  <a class="sidebar-item" onclick="showTab('mobility')">Mobility Documents SOP</a>
+
+  <div class="sidebar-section">Go-to-Market</div>
+  <a class="sidebar-item" onclick="showTab('sales')">Sales & Pitching</a>
+
+  <div class="sidebar-section">Reference</div>
+  <a class="sidebar-item" onclick="showTab('faq')">FAQs</a>
+  <a class="sidebar-item" onclick="showTab('escalation')">Escalation Routes</a>
+  <a class="sidebar-item" onclick="showTab('gaps')">Gaps / Ambiguities</a>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <div class="topbar h1" style="font-size:17px;font-weight:700;">Contractor of Record (COR)</div>
+      <div class="sub">Master Knowledge Base · April 2026</div>
+    </div>
+    <div class="rename-pill">⚠ Renamed from "Deel Shield" — August 2024</div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <div class="tab active" onclick="showTab('overview')">Overview</div>
+    <div class="tab" onclick="showTab('definitions')">Definitions</div>
+    <div class="tab" onclick="showTab('availability')">Availability</div>
+    <div class="tab" onclick="showTab('lifecycle')">Lifecycle</div>
+    <div class="tab" onclick="showTab('onboarding')">Onboarding</div>
+    <div class="tab" onclick="showTab('termination')">Termination</div>
+    <div class="tab" onclick="showTab('pricing')">Pricing</div>
+    <div class="tab" onclick="showTab('invoicing')">Invoicing</div>
+    <div class="tab" onclick="showTab('compliance')">Compliance</div>
+    <div class="tab" onclick="showTab('exemptions')">Exemptions</div>
+    <div class="tab" onclick="showTab('verification')">Verification</div>
+    <div class="tab" onclick="showTab('mobility')">Mobility SOP</div>
+    <div class="tab" onclick="showTab('sales')">Sales</div>
+    <div class="tab" onclick="showTab('faq')">FAQs</div>
+    <div class="tab" onclick="showTab('escalation')">Escalation</div>
+    <div class="tab" onclick="showTab('gaps')">Gaps</div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content">
+
+    <!-- ===== OVERVIEW ===== -->
+    <div id="tab-overview" class="tab-content active">
+      <h2>Product Overview</h2>
+      <p>Deel Contractor of Record (COR) is an <strong>Agency of Record</strong> model in which Deel hires independent contractors <em>on behalf of the client</em> and manages the full contractor lifecycle: classification, compliance, contracting, invoicing, and payment. Clients get access to a global, flexible workforce without taking on the legal risk of contractor misclassification.</p>
+
+      <div class="callout info">
+        <strong>Renamed August 2024</strong>
+        "Deel Shield" is now officially "Deel Contractor of Record (COR)." All references, including internal and external comms, should use the new name.
+      </div>
+
+      <h3>How It Works — In One Sentence</h3>
+      <p>The client selects COR when creating a contractor contract → Deel conducts an eligibility check → if approved, Deel signs a contract with the contractor → Deel invoices the client a management fee + contractor compensation → Deel assumes all misclassification liability.</p>
+
+      <h3>Key Value Propositions</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Value</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Misclassification Protection</strong></td><td>Deel assumes and indemnifies clients against liability from contractor reclassification decisions</td></tr>
+            <tr><td><strong>Compliance Management</strong></td><td>Deel owns hiring, contract administration, and compliance obligations</td></tr>
+            <tr><td><strong>Global Reach</strong></td><td>Available in all countries where Deel supports IC hiring</td></tr>
+            <tr><td><strong>Flexible Workforce</strong></td><td>Contractor model with no long-term employment commitments</td></tr>
+            <tr><td><strong>Simplified Billing</strong></td><td>Clients pay a single invoice; Deel handles contractor payments</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Stakeholder Guide</h3>
+      <div class="stakeholder-grid">
+        <div class="stakeholder-card">
+          <div class="role">Product Manager</div>
+          <ul>
+            <li>Product under Contracts > COR</li>
+            <li>Three contract types: Fixed, PAYG, Milestone</li>
+            <li>Core features: eligibility, compliance, invoicing, termination</li>
+            <li>PM: Dante Gadano / Prashant Pratap Singh</li>
+          </ul>
+        </div>
+        <div class="stakeholder-card">
+          <div class="role">POM / Ops</div>
+          <ul>
+            <li>Oversight of eligibility assessments</li>
+            <li>Manual SOW review queue (GSC ONB)</li>
+            <li>Exemption request processing</li>
+            <li>Deposit management</li>
+          </ul>
+        </div>
+        <div class="stakeholder-card">
+          <div class="role">Sales / AE</div>
+          <ul>
+            <li>Pitch as indirect hiring model</li>
+            <li>Set pricing during MSA setup</li>
+            <li>Discounts → GSC/Deal Desk only</li>
+            <li>Set client expectations early</li>
+          </ul>
+        </div>
+        <div class="stakeholder-card">
+          <div class="role">CSM / OBM</div>
+          <ul>
+            <li>Own contract creation & mass onboarding</li>
+            <li>Monitor SOW signing + deposits</li>
+            <li>Log exemption requests</li>
+            <li>Manage termination & refunds</li>
+          </ul>
+        </div>
+        <div class="stakeholder-card">
+          <div class="role">Support</div>
+          <ul>
+            <li>Handle verification letter requests</li>
+            <li>Compliance document queries</li>
+            <li>Mobility doc counter-sigs (via GSC)</li>
+            <li>Standard issue escalation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DEFINITIONS ===== -->
+    <div id="tab-definitions" class="tab-content">
+      <h2>Key Concepts & Definitions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+          <tbody>
+            <tr><td><strong>COR</strong></td><td>Contractor of Record. Deel's Agency of Record service where Deel hires contractors on behalf of clients. Formerly "Deel Shield."</td></tr>
+            <tr><td><strong>IC</strong></td><td>Independent Contractor. A standard contractor hired directly by the client via Deel — not covered by COR.</td></tr>
+            <tr><td><strong>EOR</strong></td><td>Employer of Record. Deel's employment product (full-time employees). Shares the same MSA as COR.</td></tr>
+            <tr><td><strong>MSA</strong></td><td>Master Service Agreement. Signed once per legal entity between the client and Deel Inc (US). Covers both EOR and COR.</td></tr>
+            <tr><td><strong>WOF / SOW</strong></td><td>Work Order Form / Scope of Work (Exhibit A). Specific to each COR contractor. Signed by the client and Deel.</td></tr>
+            <tr><td><strong>Fixed Rate</strong></td><td>COR contract with a fixed monthly payment. Requires a deposit.</td></tr>
+            <tr><td><strong>PAYG</strong></td><td>Pay-As-You-Go contract. Paid per hour worked. No deposit required.</td></tr>
+            <tr><td><strong>Milestone</strong></td><td>Contract paid on delivery of defined milestones. No deposit required.</td></tr>
+            <tr><td><strong>Eligibility Assessment</strong></td><td>2-question in-product questionnaire to determine COR suitability.</td></tr>
+            <tr><td><strong>Deposit</strong></td><td>Pre-payment for Fixed Rate contracts only. Typically 1x monthly rate + management fee. Refunded at contract end.</td></tr>
+            <tr><td><strong>Management Fee</strong></td><td>Deel's COR service fee. Min $325/month flat fee OR min 15% of contractor salary — whichever is higher.</td></tr>
+            <tr><td><strong>Consulting Fee</strong></td><td>The contractor's compensation. Invoiced contractor → Deel → mirrored to client.</td></tr>
+            <tr><td><strong>MTA</strong></td><td>Mutual Termination Agreement. Used when a contract ends outside standard notice period terms.</td></tr>
+            <tr><td><strong>GSC</strong></td><td>Global Service Center. Handles custom MSA setup, counter-signatures, mobility docs, and pricing approvals.</td></tr>
+            <tr><td><strong>OBM</strong></td><td>Onboarding Manager. Owns the client onboarding process at Deel.</td></tr>
+            <tr><td><strong>COHD</strong></td><td>Internal Deel ticketing system for Legal and GSC escalations.</td></tr>
+            <tr><td><strong>RTW</strong></td><td>Right to Work check. Required in certain countries before a COR contract can be activated.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== AVAILABILITY ===== -->
+    <div id="tab-availability" class="tab-content">
+      <h2>Availability & Eligibility</h2>
+
+      <div class="callout info">
+        <strong>General Rule</strong>
+        COR is available in any country where Deel supports Independent Contractor (IC) hiring.
+      </div>
+
+      <h3>Geographic Restrictions</h3>
+
+      <div class="callout danger">
+        <strong>California (US) — PROHIBITED</strong>
+        COR is not permitted under any circumstances in California.
+      </div>
+
+      <div class="callout warn">
+        <strong>United States — Case-by-Case Approval</strong>
+        COR in the US requires case-by-case approval regardless of where the client or contractor is located. Significant misclassification risk applies.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Country / Region</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><strong>California (US)</strong></td><td><span class="no">BLOCKED</span></td><td>Prohibited under any circumstances</td></tr>
+            <tr><td><strong>United States (ex-CA)</strong></td><td><span class="conditional">RESTRICTED</span></td><td>Case-by-case approval required; high misclassification risk</td></tr>
+            <tr><td><strong>Singapore</strong></td><td><span class="conditional">LIMITED</span></td><td>Citizens and permanent residents only. Foreigners not supported.</td></tr>
+            <tr><td><strong>Russia / Belarus</strong></td><td><span class="no">BLOCKED</span></td><td>No new customers accepted. No exceptions.</td></tr>
+            <tr><td><strong>Same country as client entity</strong></td><td><span class="conditional">CONDITIONAL</span></td><td>Possible via exemption + eligibility assessment. Not automatic.</td></tr>
+            <tr><td><strong>All other IC-supported countries</strong></td><td><span class="yes">AVAILABLE</span></td><td>Subject to eligibility assessment</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warn">
+        <strong>Key Rule: Entity Country ≠ Contractor Country</strong>
+        Clients cannot hire a COR contractor via a legal entity in the same country where the contractor is based.
+        <br><br>Example: A client with a UK entity must use their Irish entity to hire a COR contractor based in the UK.
+      </div>
+
+      <h3>Eligibility Assessment (2 Questions)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Question</th><th>Required Answer</th><th>If Wrong Answer</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>"Is the Contractor Agreement on Deel perfectly reflecting your organization's relationship and working practices with the contractor?"</td>
+              <td><span class="yes">Yes</span></td>
+              <td>Contract ineligible. "No" → EOR is likely more suitable.</td>
+            </tr>
+            <tr>
+              <td>"What best characterizes the work of the worker?"</td>
+              <td><span class="yes">None of the above</span> (not a prohibited category)</td>
+              <td>Contract ineligible if a prohibited job category is selected.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Prohibited Job Categories</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>Reason</th></tr></thead>
+          <tbody>
+            <tr><td>Apprentice</td><td>Additional licensing, insurance, regulatory requirements, onsite work</td></tr>
+            <tr><td>Trainee</td><td>Same as above</td></tr>
+            <tr><td>Labourer</td><td>Same as above</td></tr>
+            <tr><td>Driver</td><td>Same as above</td></tr>
+            <tr><td>Medical Worker</td><td>Same as above</td></tr>
+            <tr><td>Legal Worker</td><td>Same as above</td></tr>
+            <tr><td>Construction Worker</td><td>Same as above</td></tr>
+            <tr><td>Finance / Investment Roles</td><td>Additional licensing and regulatory requirements</td></tr>
+            <tr><td>C-Suite / Director+</td><td>Default compliance restriction (exemption available)</td></tr>
+            <tr><td>Interns</td><td>Not eligible for COR</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Contract Compliance Requirements</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Contract Field</th><th>Default Requirement</th><th>Exemption?</th></tr></thead>
+          <tbody>
+            <tr><td>Legal Entity</td><td>Contractor not in same country as client entity</td><td><span class="yes">Yes — Legal approval</span></td></tr>
+            <tr><td>Job Title</td><td>Not C-level (Director and above)</td><td><span class="yes">Yes — Legal approval</span></td></tr>
+            <tr><td>Notice Period</td><td>Greater than 1 day</td><td><span class="yes">Yes — Legal approval</span></td></tr>
+            <tr><td>Special Clauses</td><td>No special clauses</td><td><span class="no">No — Not available ever</span></td></tr>
+            <tr><td>Scope of Work</td><td>No client name in contract name, title, or scope</td><td><span class="no">No</span></td></tr>
+            <tr><td>Scope of Work</td><td>No prohibited keywords (cannabis, guns, etc.)</td><td><span class="no">No</span></td></tr>
+            <tr><td>Additional Documents</td><td>None attached</td><td><span class="no">No</span></td></tr>
+            <tr><td>Stock Options</td><td>Not permitted</td><td><span class="no">No</span></td></tr>
+            <tr><td>Equipment</td><td>Laptops and mobile only via platform agreement</td><td><span class="no">No</span></td></tr>
+            <tr><td>Start Date</td><td>Cannot be in the past</td><td><span class="no">No</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== LIFECYCLE ===== -->
+    <div id="tab-lifecycle" class="tab-content">
+      <h2>End-to-End Lifecycle</h2>
+
+      <h3>Full COR Contract Flow</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-label">MSA Signed</div>
+          <div class="step-sub">Client signs EOR/COR MSA once per entity</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-label">Contract Created</div>
+          <div class="step-sub">Client creates Fixed / PAYG / Milestone contract</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-label">Eligibility Assessment</div>
+          <div class="step-sub">2-question in-product check</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-label">Deel Review</div>
+          <div class="step-sub">Auto or manual SOW review</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">5</div>
+          <div class="step-label">Contractor Signs</div>
+          <div class="step-sub">Invite sent; contractor completes KYC + RTW + docs</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">6</div>
+          <div class="step-label">Deposit Paid</div>
+          <div class="step-sub">Fixed contracts only</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">7</div>
+          <div class="step-label">Client Signs SOW</div>
+          <div class="step-sub">Exhibit A — even if deposit pending</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">8</div>
+          <div class="step-label">Deel Signs</div>
+          <div class="step-sub">Contract becomes active</div>
+        </div>
+      </div>
+
+      <h3>Signing Order (As of March 2023)</h3>
+      <ol style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2;">
+        <li>Contractor signs</li>
+        <li>Deposit paid (Fixed only — client can sign SOW even if deposit still processing)</li>
+        <li>Client signs SOW</li>
+        <li>Deel signs (countersigns)</li>
+      </ol>
+
+      <h3>Contract Types Comparison</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Payment Structure</th><th>Deposit?</th><th>Management Fee Timing</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Fixed</strong></td><td>Fixed monthly amount</td><td><span class="yes">Yes</span></td><td>Monthly, with first invoice of the month</td></tr>
+            <tr><td><strong>PAYG</strong></td><td>Per hour worked</td><td><span class="no">No</span></td><td>Only months contractor submits work</td></tr>
+            <tr><td><strong>Milestone</strong></td><td>Per milestone delivered</td><td><span class="no">No</span></td><td>Only months contractor submits work</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Upgrading an IC to COR (3 Steps)</h3>
+      <div class="callout info">
+        <strong>Available since May 2023.</strong> Existing IC contracts (Fixed, PAYG, Milestone) can be upgraded to COR coverage. This does not change the contract type — only adds COR protection.
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-label">Eligibility Assessment</div>
+          <div class="step-sub">Same 2-question check</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-label">Review Contract</div>
+          <div class="step-sub">SOW pulled from IC contract; special clauses dropped</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-label">Sign New Contract</div>
+          <div class="step-sub">New contract tagged "Updated" + COR. Client + contractor sign.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-label">Handle IC Contract</div>
+          <div class="step-sub">Auto termination (recommended) or manual</div>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <strong>Backdating is not allowed.</strong>
+        If a contractor signs after the original start date, the client must update the start date to the signing date (or later), and both parties must re-sign.
+      </div>
+    </div>
+
+    <!-- ===== ONBOARDING ===== -->
+    <div id="tab-onboarding" class="tab-content">
+      <h2>Customer Onboarding (OBM & CSM)</h2>
+      <p>All COR onboarding follows the OBM process. Two paths are available:</p>
+
+      <div class="card">
+        <h3>Path A — Individual Contract Creation (Client Self-Service)</h3>
+        <ol style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2.2;">
+          <li>Client creates a new contractor contract (Fixed / PAYG / Milestone)</li>
+          <li>At the Compliance step, selects <strong>"Full Protection by Deel"</strong></li>
+          <li>Completes eligibility assessment</li>
+          <li>Contract submitted to Deel for approval (auto or manual)</li>
+          <li>Fixed contracts: client pays deposit</li>
+          <li>Contractor receives email invitation</li>
+          <li>Contractor completes onboarding: KYC → RTW (if required) → mandatory documents</li>
+          <li>Client signs SOW (Exhibit A)</li>
+          <li>Deel countersigns → contract goes active</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>Path B — Mass Onboarding (10+ Contractors)</h3>
+        <ol style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2.2;">
+          <li>OBM/CSM sends the <strong>COR Onboarding Mass Template</strong> to the client</li>
+          <li>Client populates the template</li>
+          <li>OBM/CSM imports in Admin: Client account → Contracts → Import</li>
+          <li>Select team, client org & legal entity (Deel Inc)</li>
+          <li>Upload the TSV file</li>
+          <li>Follow remaining individual steps</li>
+        </ol>
+        <div class="callout info" style="margin-top:12px;">
+          COR contracts can reside on <strong>any Team</strong>. No need to add <code>deel-shield@deel.com</code> as admin — this is now automated.
+        </div>
+      </div>
+
+      <h3>SOW Manual Review Steps (GSC ONB Team)</h3>
+      <ol style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2.2;">
+        <li>Add 🟡 emoji to Slack notification (prevents duplicate work)</li>
+        <li>Check the reason for the approval request</li>
+        <li>Open contract via the "Approval request" link</li>
+        <li>Log in as Provider with write access (Deel)</li>
+        <li>Update contract as needed (remove additional docs, remove client name from SOW, etc.)</li>
+        <li>Verify all components against compliance requirements</li>
+        <li>Click <strong>Approve & Sign</strong></li>
+        <li>Update emoji to ✅</li>
+        <li>Tag CSM in thread with changes made</li>
+      </ol>
+
+      <h3>Adding New Contractors (Ongoing)</h3>
+      <p>New contracts can be added under an existing agreement by the client themselves, or via the COR onboarding mass template. Action owner: CSM.</p>
+
+      <h3>Refund Process (Interim)</h3>
+      <div class="callout warn">
+        <strong>Note:</strong> Verify current platform capabilities before following this interim process, which was documented as of early 2023.
+      </div>
+      <ol style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2.2;">
+        <li>CSM requests Credit Note in <span class="channel-tag">#financial-doc-request</span></li>
+        <li>CSM raises Internal Support Form with: Invoice PDF, Contract Child Invoice ID, Payment reference (deposits only), bank account + SWIFT + beneficiary address</li>
+        <li>Support raises the OSHD</li>
+        <li>FintechOps executes the refund</li>
+      </ol>
+    </div>
+
+    <!-- ===== TERMINATION ===== -->
+    <div id="tab-termination" class="tab-content">
+      <h2>Termination</h2>
+
+      <div class="callout info">
+        <strong>Who notifies the contractor?</strong> Deel notifies the contractor via email once the client selects the end date. Clients do not communicate directly with the contractor about termination.
+      </div>
+
+      <h3>Steps for Client</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-label">Go to People</div>
+          <div class="step-sub">Select the People icon on the home page</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-label">Actions Menu</div>
+          <div class="step-sub">Click Actions → End Contract</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-label">Fill in Details</div>
+          <div class="step-sub">End date, reason, payment amount</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-label">Deel Notifies</div>
+          <div class="step-sub">Contractor receives email from Deel</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">5</div>
+          <div class="step-label">Deposit Refund</div>
+          <div class="step-sub">Processed after final invoice paid + bank details provided</div>
+        </div>
+      </div>
+
+      <h3>Key Rules</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Rule</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td>Notice period</td><td>Must be &gt; 1 day from the date the email is sent. Follows the notice period agreed in the contract.</td></tr>
+            <tr><td>MTA waiver</td><td>If client pays the full amount owed (including notice period coverage), they can terminate without an MTA.</td></tr>
+            <tr><td>Downgrading to IC</td><td>Not possible directly. Must terminate the COR contract and create a new IC contract.</td></tr>
+            <tr><td>Final payment</td><td>Clients cannot set the final payment amount to $0 USD.</td></tr>
+            <tr><td>Backdating</td><td>Termination cannot be backdated.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Deposit Refund Process</h3>
+      <p>Upon termination, the deposit status moves to <strong>"Pending Refund."</strong> Refund is processed once:</p>
+      <ul style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2;">
+        <li>The client has paid the final invoice on the contract</li>
+        <li>The client has provided bank details for the refund</li>
+      </ul>
+      <p>Clients view deposit status under the <strong>"Deposits" card</strong> on the COR Contract Details page.</p>
+    </div>
+
+    <!-- ===== PRICING ===== -->
+    <div id="tab-pricing" class="tab-content">
+      <h2>Pricing & Discounts</h2>
+
+      <div class="card">
+        <h3>Standard Pricing</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Rate</th></tr></thead>
+            <tbody>
+              <tr><td>Flat fee</td><td>Minimum <strong>$325/month</strong></td></tr>
+              <tr><td>Percentage of contractor salary</td><td>Minimum <strong>15%</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout info">
+          The <strong>higher</strong> of the two amounts is charged. Fee only applies in months when the contractor performs/submits work. As of April 25, 2024, the calculation <strong>excludes expenses and VAT</strong>.
+        </div>
+      </div>
+
+      <h3>Pricing by Contract Type</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Contract Type</th><th>When Management Fee is Charged</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Fixed Rate</strong></td><td>Every month (monthly)</td></tr>
+            <tr><td><strong>PAYG</strong></td><td>Only in months when the contractor submits work</td></tr>
+            <tr><td><strong>Milestone</strong></td><td>Only in months when the contractor submits work</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Worked Example — 15% with $325 Minimum (PAYG)</h3>
+      <div class="pricing-ex">
+        <div class="inv">Invoice 1:</div>  Work: $1,000 | 15% = $150 → Below minimum → Client pays <strong>$325</strong><br><br>
+        <div class="inv">Invoice 2:</div>  Work: $1,000 | 15% of month total ($2,000) = $300 → Still below minimum (already paid $325) → <strong>$0 charged</strong><br><br>
+        <div class="inv">Invoice 3:</div>  Work: $1,000 | 15% of month total ($3,000) = $450 → Above minimum → $450 - $325 already paid = <strong>$125 charged</strong>
+      </div>
+
+      <h3>Discount Process</h3>
+      <div class="callout warn">
+        <strong>All pricing changes (including deposits) must go through GSC / Deal Desk for approval.</strong>
+        Partner / YC discounts are NOT available for COR.
+      </div>
+      <ol style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2.2;">
+        <li>Lead with standard pricing and reiterate that Deel takes on liability under COR</li>
+        <li>If strategic logo or significant headcount → discuss with Sales Manager first</li>
+        <li>Submit via Workbench Request (most resolved within 30 min) or <span class="channel-tag">#gsc-dealdesk-requests</span></li>
+        <li>Once confirmed: update Salesforce COR section + Clause 4.1 of MSA & SOW</li>
+      </ol>
+    </div>
+
+    <!-- ===== INVOICING ===== -->
+    <div id="tab-invoicing" class="tab-content">
+      <h2>Invoicing</h2>
+
+      <div class="callout success">
+        <strong>Auto-Billing Available (May 2025)</strong>
+        Automatic payments for COR invoices are now available for all clients. Configurable in Billing & Payments settings.
+      </div>
+
+      <h3>Two Invoice Types</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Invoice</th><th>Contents</th><th>Cycle</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>COR Consulting Services Invoice</strong></td>
+              <td>Contractor compensation (fixed rate, approved PAYG hours, adjustments, expenses)</td>
+              <td>Client's chosen cycle (weekly / biweekly / monthly)</td>
+            </tr>
+            <tr>
+              <td><strong>COR Management Fees Invoice</strong></td>
+              <td>Deel's management fee</td>
+              <td>Fixed calendar month basis</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>How the Mirror Invoice Works</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-label">Contractor → Deel</div>
+          <div class="step-sub">Worker invoice (Shielded invoice)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-label">Deel → Client</div>
+          <div class="step-sub">Mirrored Client invoice (MSA invoice)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-label">Client Pays</div>
+          <div class="step-sub">Only pays the mirrored Client invoice</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-label">Deel Pays Contractor</div>
+          <div class="step-sub">Per the contractor's payment cycle</div>
+        </div>
+      </div>
+
+      <h3>Management Fee Invoice Logic by Pricing Configuration</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Configuration</th><th>Invoice Behavior</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Percentage (with or without minimum)</strong></td><td>Linked to each Consulting Services invoice processed in a given month. Based on the month the worker invoice is processed (not when work was performed).</td></tr>
+            <tr><td><strong>Minimum (e.g. 15% with $325 min)</strong></td><td>If the percentage charged doesn't reach the minimum, a minimum adjustment fee invoice is raised at month-end.</td></tr>
+            <tr><td><strong>Fixed Fee</strong></td><td>Invoiced alongside the first contractor invoice issued in a calendar month. Based on the month the worker invoice is issued (differs from percentage, which uses processing date).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Default Settings (Fixed Rate Contracts)</h3>
+      <ul style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2;">
+        <li>Invoice cycle: <strong>Monthly</strong></li>
+        <li>Payment due: <strong>Same day as invoice</strong></li>
+        <li>Finalized: <strong>10 days before due date</strong> → typically issued on the 20th or 21st of the month</li>
+      </ul>
+
+      <h3>Currency & Payment</h3>
+      <ul style="padding-left:20px;font-size:13px;color:var(--deel-mid);line-height:2;">
+        <li>Management Fees invoice: typically <strong>USD</strong></li>
+        <li>Clients invoiced in the <strong>contract currency</strong></li>
+        <li>Payment via any available Deel funding method or currency</li>
+        <li>All invoices issued from <strong>Deel, Inc. (US entity)</strong></li>
+      </ul>
+    </div>
+
+    <!-- ===== COMPLIANCE ===== -->
+    <div id="tab-compliance" class="tab-content">
+      <h2>Compliance Documents</h2>
+
+      <div class="callout info">
+        <strong>Missing documents do NOT block contracts or payments.</strong> Compliance documents serve only as a risk-reduction checklist. Contractors are still able to get paid and withdraw funds even if documents are outstanding.
+      </div>
+
+      <h3>Individual vs. Business/Entity</h3>
+      <p>COR contractors can onboard as <strong>individuals</strong> or <strong>businesses/entities</strong> depending on country and how they operate. Since COR is a contractor model, the contractor is responsible for their own tax, social security, invoicing, and accounting.</p>
+
+      <div class="callout warn">
+        <strong>Important for Support Teams</strong>
+        Do NOT state "no business setup is needed" as a blanket rule. Requirements vary by country. Always check the Contractor Compliance Docs Dashboard for country-specific requirements.
+      </div>
+
+      <p>In many countries, contractors must have a recognized structure such as: self-employed / freelancer registration, sole proprietorship, professional / freelance license, or an LLC / limited company.</p>
+
+      <h3>How It Works</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Actor</th><th>Action</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td>Contractor</td><td>Manages and uploads compliance documents</td><td>Compliance Documents tab on Deel home page</td></tr>
+            <tr><td>Contractor</td><td>Outstanding docs flagged in red; green confirmation when all submitted</td><td>Same tab</td></tr>
+            <tr><td>Client</td><td>Views contractor compliance documents</td><td>People → Select Profile → Compliance Documents</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== EXEMPTIONS ===== -->
+    <div id="tab-exemptions" class="tab-content">
+      <h2>Compliance Exemptions & Clauses</h2>
+
+      <div class="callout danger">
+        <strong>Special clauses are NOT available for COR contracts — not even by exception.</strong>
+        This was removed as a permanent policy decision.
+      </div>
+
+      <h3>Exemptable Fields (Legal Approval Required)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Default</th><th>Exemptable?</th></tr></thead>
+          <tbody>
+            <tr><td>Client / Contractor Legal Entity</td><td>Not hired in same country as client's entity</td><td><span class="yes">Yes</span></td></tr>
+            <tr><td>Job Title</td><td>Not C-level (Director+)</td><td><span class="yes">Yes</span></td></tr>
+            <tr><td>Notice Period</td><td>Greater than 1 day</td><td><span class="yes">Yes</span></td></tr>
+            <tr><td>Special Clauses</td><td>No special clauses</td><td><span class="no">Never</span></td></tr>
+            <tr><td>All other fields</td><td>See compliance requirements</td><td><span class="no">No</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Exemption Request Process</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-label">Questionnaire</div>
+          <div class="step-sub">Complete the Deel COR Questionnaire for the job profile</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-label">Legal Review</div>
+          <div class="step-sub">Raise ticket to Legal via COHD with questionnaire attached</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-label">Backend Change</div>
+          <div class="step-sub">TechOps via Internal Webform, with COHD ticket attached</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-label">Feature Flag</div>
+          <div class="step-sub">Applied at org level (not contract level)</div>
+        </div>
+      </div>
+
+      <h4>COHD Ticket Template</h4>
+      <div class="pricing-ex">
+        <strong>COR Compliance Exemption Request</strong><br>
+        Client / Org ID: &lt;admin link&gt;<br>
+        Problem Statement: [describe the issue]<br>
+        Requested Change: [e.g., Change Job Title]<br>
+        Supporting Document: COR Questionnaire
+      </div>
+
+      <div class="callout info">
+        The CSM is responsible for logging exception requests for contract fields where exemptions are permitted.
+      </div>
+    </div>
+
+    <!-- ===== VERIFICATION ===== -->
+    <div id="tab-verification" class="tab-content">
+      <h2>Contractor Verification Letters & Documents</h2>
+
+      <div class="callout warn">
+        <strong>COR contractors are NOT employees.</strong>
+        They do not have access to Employment Verification features. Use Contractor Verification Letters instead.
+      </div>
+
+      <h3>Standard Verification Letter</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Step</th><th>Who</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Enable</td><td>Client</td><td>Organization Settings → Contract Settings → Contract Documents → Allow workers to download verification letters (toggle ON)</td></tr>
+            <tr><td>Download</td><td>Contractor</td><td>Go to Compliance section in Deel app → Download verification letter</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout danger">
+        If the toggle is OFF, contractors will NOT see the option to download verification letters.
+      </div>
+
+      <h3>Services Proposal Letter (Before Signing)</h3>
+      <p>Prospective COR contractors with a draft or partially signed contract can access a <strong>Services Proposal Letter</strong> — a pre-contract offer document showing project details and compensation. Available from the Contract View screen after creating a Deel account.</p>
+      <p>Once the contract is fully signed, the Services Proposal Letter is replaced by the standard Contractor Verification Letter (if enabled by the client).</p>
+      <div class="callout info">Only available to prospective COR contractors (not regular IC) at this time.</div>
+
+      <h3>Customized Verification Letters</h3>
+      <div class="callout warn">
+        <strong>Future Release — Not yet available.</strong>
+        When released, contractors will be able to request: year-to-date earnings, translations from English, and specific callouts or attachments.
+      </div>
+
+      <h3>Escalation</h3>
+      <p>Issues with verification letters should be routed to the <strong>Support team</strong>.</p>
+    </div>
+
+    <!-- ===== MOBILITY SOP ===== -->
+    <div id="tab-mobility" class="tab-content">
+      <h2>Mobility Documents — Counter-Signature SOP</h2>
+      <p>This process provides COR contractors with Deel-signed mobility documents needed for visa applications and compliance purposes (e.g., work permits, compliance certificates).</p>
+
+      <h3>Ownership & SLA</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Team</th><th>Role</th><th>SLA</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Customer Support</strong></td><td>Collects requests, creates GSC ticket, delivers signed docs to contractor</td><td>Primary contact</td></tr>
+            <tr><td><strong>GSC Deel Desk</strong></td><td>Counter-signs documents</td><td><strong>Within 4 business hours</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Process Steps</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-label">Request Received</div>
+          <div class="step-sub">Support collects mobility doc request from COR contractor</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-label">GSC Ticket</div>
+          <div class="step-sub">Support creates ticket via JIRA/COHD portal</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-label">GSC Signs</div>
+          <div class="step-sub">GSC Deel Desk counter-signs within 4 business hours</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-label">Docs Delivered</div>
+          <div class="step-sub">Support sends signed docs to contractor</div>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <strong>Slack:</strong> <span class="channel-tag">#backup-shield-mobility-requests</span> &nbsp;|&nbsp;
+        <strong>Tool:</strong> JIRA &nbsp;|&nbsp;
+        <strong>No Legal involvement needed</strong> for standard requests.
+      </div>
+    </div>
+
+    <!-- ===== SALES ===== -->
+    <div id="tab-sales" class="tab-content">
+      <h2>Sales & Pitching Guide</h2>
+
+      <h3>Ideal Customer Profile</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Profile</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Large contractor volumes</strong></td><td>Agencies with large contingent workforces who want to outsource compliance risk</td></tr>
+            <tr><td><strong>Risk-averse clients</strong></td><td>Companies in higher-risk countries (e.g., Germany) who avoid working directly with contractors</td></tr>
+            <tr><td><strong>Entity build-out pending</strong></td><td>Companies opening their own entities with a long lead time — need workers now</td></tr>
+            <tr><td><strong>High-growth startups</strong></td><td>Rapidly scaling teams on flexible terms with minimal employer overhead</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Talk Tracks</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Value Point</th><th>What to Say</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Indirect hiring model</strong></td><td>"Deel hires the contractor on your behalf and contracts them back to you as a consultant."</td></tr>
+            <tr><td><strong>Worker classification</strong></td><td>"Deel reviews the job description and role to ensure suitability as a contractor for that region."</td></tr>
+            <tr><td><strong>Liability transfer</strong></td><td>"As the employer of record, Deel takes on the liability — if misclassification issues arise, Deel is responsible."</td></tr>
+            <tr><td><strong>Global access</strong></td><td>"After setup, all you do is pay a monthly invoice: the management fee plus the contractor's compensation."</td></tr>
+            <tr><td><strong>Indemnification</strong></td><td>"Deel indemnifies you against legally enforceable misclassification claims, subject to a definitive determination by a competent authority."</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Client Limitations — Set These Expectations Early</h3>
+      <div class="callout danger">
+        <strong>Must communicate before client commits:</strong>
+        <ul style="padding-left:18px;margin-top:8px;line-height:2;">
+          <li>Cannot redline the contractor contract</li>
+          <li>Cannot hire via an entity in the same country as the contractor</li>
+          <li>Cannot hire C-suite (Director+) without an exemption</li>
+          <li>Cannot upload additional documents in the contract creation flow</li>
+          <li>Cannot add special clauses (triggers Legal review; non-compliant clauses rejected)</li>
+          <li>Cannot backdate the contract</li>
+          <li>No stock options or benefits (unlike EOR)</li>
+          <li>No partner / YC discounts</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== FAQ ===== -->
+    <div id="tab-faq" class="tab-content">
+      <h2>FAQs & Common Scenarios</h2>
+
+      <h3>Eligibility & Product</h3>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can COR contractors be individuals or business entities? <span class="chevron">▼</span></div>
+        <div class="faq-a">Yes. COR contractors can be onboarded as either individuals or businesses/entities depending on their country and how they operate. Since COR is a contractor model, the contractor remains responsible for their own tax and compliance obligations.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can the COR contractor be in the same country as the client? <span class="chevron">▼</span></div>
+        <div class="faq-a">Possible via an exemption, but not the default. Requires a questionnaire and Legal review. Not automatically approved.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How do we know if a worker should be COR vs. EOR? <span class="chevron">▼</span></div>
+        <div class="faq-a">COR is for workers legitimately operating as independent contractors. If the actual working relationship more closely resembles employment (exclusive engagement, set hours, company tools, etc.), EOR is likely more appropriate. The 2-question eligibility assessment helps determine this — "No" on Question 1 typically suggests EOR is better.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can interns or C-suite be hired via COR? <span class="chevron">▼</span></div>
+        <div class="faq-a">Interns: No, not eligible for COR. C-suite (Director+): Not by default, but an exemption can be requested via Legal approval.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can COR contracts be transferred across legal entities? <span class="chevron">▼</span></div>
+        <div class="faq-a">No. COR contracts cannot be transferred across legal entities.</div>
+      </div>
+
+      <h3>Contracts & Signing</h3>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can clients redline the contractor contract? <span class="chevron">▼</span></div>
+        <div class="faq-a">No. Clients cannot make any changes or redlines to the standard Deel contractor contract used for COR.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What if the contractor signs after the contract start date? <span class="chevron">▼</span></div>
+        <div class="faq-a">COR contracts cannot be backdated. The client must update the start date to the signing date or later, and both parties must re-sign the contract.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Does the SOW need to be signed for every COR contract? <span class="chevron">▼</span></div>
+        <div class="faq-a">Yes. The client must actively sign the SOW (Exhibit A) before Deel can countersign. This applies to every COR contract.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can a client use one EOR/COR MSA to hire on a different legal entity? <span class="chevron">▼</span></div>
+        <div class="faq-a">No. A separate MSA must be signed per legal entity. An MSA on one entity cannot be reused for a different entity.</div>
+      </div>
+
+      <h3>Deposits & Pricing</h3>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Why is a deposit charged for fixed contracts? <span class="chevron">▼</span></div>
+        <div class="faq-a">Fixed rate contracts commit Deel to paying the contractor a set amount monthly regardless of whether the client pays Deel first. The deposit protects Deel in case the client fails to pay.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">I see a deposit on a PAYG/Milestone contract. Is this correct? <span class="chevron">▼</span></div>
+        <div class="faq-a">No. Only Fixed Rate contracts require deposits. If a PAYG or Milestone contract is requesting a deposit, escalate to #product-issues as this may be a platform bug.</div>
+      </div>
+
+      <h3>Invoicing & Payments</h3>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What is the difference between Management Fees and Consulting Fees? <span class="chevron">▼</span></div>
+        <div class="faq-a"><strong>Consulting Fee:</strong> The contractor's compensation (salary, hours, milestone payment). Invoiced from the contractor to Deel, then mirrored to the client.<br><br><strong>Management Fee:</strong> Deel's service fee for COR coverage. Either 15% of the consulting fee or $325/month — whichever is higher.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Does Automatic Payment work with COR? <span class="chevron">▼</span></div>
+        <div class="faq-a">Yes. Auto-billing for COR invoices became available for all clients as of May 2025. Configurable in Billing & Payments settings.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">If a client brings on a COR contractor in a non-US country, which Deel entity handles it? <span class="chevron">▼</span></div>
+        <div class="faq-a">All COR contracts go through <strong>Deel Inc (the US entity)</strong>, regardless of the contractor's country of location.</div>
+      </div>
+
+      <h3>Compliance & Tax</h3>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Does Deel fully take on all misclassification risk? <span class="chevron">▼</span></div>
+        <div class="faq-a">Deel assumes liability for its classification decision and indemnifies clients against legally enforceable misclassification claims. However, this indemnity is contingent on a definitive payment order or reclassification determination by a competent authority. It is not a blanket guarantee against all possible risk scenarios.</div>
+      </div>
+
+      <h3>Termination</h3>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can the client terminate a COR contractor immediately? <span class="chevron">▼</span></div>
+        <div class="faq-a">If the client pays an amount equal to or greater than what is owed (including notice period coverage), they can terminate without requiring an MTA. Otherwise, the notice period in the contract must be honored (must be more than 1 day).</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Who notifies the contractor that their contract has been terminated? <span class="chevron">▼</span></div>
+        <div class="faq-a"><strong>Deel</strong> notifies the contractor via email once the client has selected the contract end date. The client does not directly communicate termination to the contractor.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I downgrade a COR contract back to a regular IC contract? <span class="chevron">▼</span></div>
+        <div class="faq-a">Not directly. You must terminate the COR contract and then create a brand new IC contract. There is no in-platform transition flow.</div>
+      </div>
+
+      <h3>Verification Letters</h3>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can a COR contractor request an Employment Verification Letter? <span class="chevron">▼</span></div>
+        <div class="faq-a">No. COR contractors are not employees and do not have access to Employment Verification features. They can request a <strong>Contractor Verification Letter</strong> instead, if enabled by the client in their organization settings.</div>
+      </div>
+    </div>
+
+    <!-- ===== ESCALATION ===== -->
+    <div id="tab-escalation" class="tab-content">
+      <h2>Support Channels & Escalation Routes</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Need</th><th>Channel / Route</th></tr></thead>
+          <tbody>
+            <tr><td>COR GTM / product updates</td><td><span class="channel-tag">#product-shield</span></td></tr>
+            <tr><td>Generic COR questions</td><td><span class="channel-tag">#help-gtm-enablement</span></td></tr>
+            <tr><td>COR Technical Issue / Bug</td><td><span class="channel-tag">#product-issues</span></td></tr>
+            <tr><td>COR Escalations (churn threat, compliance, invoicing, negative review)</td><td><span class="channel-tag">#help-support-fast-lane</span></td></tr>
+            <tr><td>Pricing changes / discount requests (urgent)</td><td><span class="channel-tag">#gsc-dealdesk-requests</span></td></tr>
+            <tr><td>Pricing changes / discount requests (standard)</td><td>Workbench Request link (most resolved within 30 min)</td></tr>
+            <tr><td>MSA / Legal questions</td><td>Legal via <strong>COHD</strong></td></tr>
+            <tr><td>Compliance exemption requests</td><td>Legal via <strong>COHD</strong> (attach COR Questionnaire)</td></tr>
+            <tr><td>Mobility document counter-signatures</td><td>GSC via <strong>JIRA</strong> | Slack: <span class="channel-tag">#backup-shield-mobility-requests</span></td></tr>
+            <tr><td>Feature Requests / Feedback</td><td><strong>Canny</strong></td></tr>
+            <tr><td>Contractor verification letter issues</td><td>Support team</td></tr>
+            <tr><td>Refund requests (credit notes)</td><td><span class="channel-tag">#financial-doc-request</span> → Internal Support Form</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== GAPS ===== -->
+    <div id="tab-gaps" class="tab-content">
+      <h2>Gaps / Ambiguities Identified</h2>
+      <p>The following items were listed as FAQs or referenced in source documents but their answers were not captured in the available content (e.g., collapsed accordion sections in original articles). These should be investigated and added.</p>
+
+      <div class="callout warn">
+        <strong>Action Required:</strong> Each item below should be verified with the relevant team and added back into this knowledge base once confirmed.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Gap / Ambiguity</th><th>Source Document</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Can the client do the eligibility assessment in bulk / on mass?</td><td>COR Availability</td></tr>
+            <tr><td>2</td><td>Can a COR contractor update their tax residence on their profile?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>3</td><td>Will Deel pay COR contractors on their due date if the client hasn't paid yet?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>4</td><td>Does Deel issue a T4A for COR contractors in Canada?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>5</td><td>Will Deel generate 1099-NEC files for COR contractors in the US?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>6</td><td>Are deposits available on mass pay?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>7</td><td>What is the treatment for COR deposits already collected on active PAYG and Milestone contracts?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>8</td><td>Does increasing the notice period affect the deposit amount?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>9</td><td>Can Deel sign the COR contract in wet ink and send it to the contractor's address?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>10</td><td>Can a client have an NDA with a Deel COR Contractor?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>11</td><td>How long can a contract be covered by Deel COR? Is there a maximum duration?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>12</td><td>Can a COR contract termination or MTA be reversed or edited after submission?</td><td>COR Terminations</td></tr>
+            <tr><td>13</td><td>Is it possible to include a termination letter in the COR termination flow?</td><td>COR Terminations</td></tr>
+            <tr><td>14</td><td>Is there an off-boarding fee for COR?</td><td>COR Contracts & FAQs</td></tr>
+            <tr><td>15</td><td>Does Deel actively review compliance documents submitted by contractors, or only collect them?</td><td>COR Compliance Documents</td></tr>
+            <tr><td>16</td><td>Is the monthly management fee pro-rated if a COR IC is terminated mid-month?</td><td>COR Pricing & Discounts</td></tr>
+            <tr><td>17</td><td>Does Deel HR handle COR contract termination?</td><td>COR Terminations</td></tr>
+            <tr><td>18</td><td><strong>Conflict:</strong> The Onboarding doc's Refunds section states "COR contracts do not charge the management fee" — this appears to mean there's no management fee to refund upon termination, but the phrasing could be misread as meaning COR never charges management fees. Needs clarification in the source document.</td><td>COR Customer Onboarding</td></tr>
+            <tr><td>19</td><td><strong>Stale process:</strong> The Refunds section in the Onboarding doc notes it's an "interim process" from 2023 and would be updated in Q2 2023. Unclear if in-platform refunds are now available or if the interim credit note process is still in use.</td><td>COR Customer Onboarding</td></tr>
+            <tr><td>20</td><td>Competitor Offerings content in the Sales & Pitching document was not captured (collapsed accordion in source).</td><td>COR Sales & Pitching</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  function showTab(name) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    // Remove active from all tabs
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    // Remove active from all sidebar items
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+
+    // Show selected
+    const content = document.getElementById('tab-' + name);
+    if (content) content.classList.add('active');
+
+    // Mark active tab
+    document.querySelectorAll('.tab').forEach(el => {
+      if (el.getAttribute('onclick') && el.getAttribute('onclick').includes(name)) {
+        el.classList.add('active');
+      }
+    });
+
+    // Mark active sidebar item
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+      if (el.getAttribute('onclick') && el.getAttribute('onclick').includes(name)) {
+        el.classList.add('active');
+      }
+    });
+
+    // Scroll content to top
+    window.scrollTo(0, 0);
+  }
+
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+    const answer = el.nextElementSibling;
+    answer.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
